@@ -4,7 +4,5 @@ using System.Text;
 
 namespace TextQuestGame.Presenter
 {
-    internal class ApplicationController
-    {
-    }
+
 }
