@@ -13,11 +13,21 @@ namespace TextQuestGame
         private FlowLayoutPanel choicePanel;
         private RichTextBox sceneText;
         private MenuStrip menu;
-
+        private ToolTip buttonToolTip;
         public MainForm()
         {
             InitializeComponent();
+            buttonToolTip = new ToolTip
+            {
+                AutomaticDelay = 500,
+                AutoPopDelay = 5000,
+                InitialDelay = 500,
+                ReshowDelay = 100   
+            };
+
+
             CreateControls();
+
         }
 
         private void CreateControls()
