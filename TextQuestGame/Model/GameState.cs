@@ -8,7 +8,8 @@ namespace TextQuestGame
     public class GameState : IGameState
     {
         public string CurrentSceneId { get; set; } = "start";
-        public List<string> Inventory { get; } = new List<string>();
+        public List<string> Inventory { get; set; } = new List<string>();
+        public Dictionary<string, object> Variables { get; set; } = new Dictionary<string, object>();
     }
 
 }
