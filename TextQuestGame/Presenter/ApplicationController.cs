@@ -129,4 +129,11 @@ namespace TextQuestGame.Presenter
             File.WriteAllText("scenes.json", defaultScenes);
             Console.WriteLine("Создан файл scenes.json с начальными сценами");
         }
-       
+        public void Dispose()
+        {
+            _presenter = null;
+            _gameService = null;
+            _view = null;
+        }
+    }
+}
