@@ -106,7 +106,7 @@ namespace TextQuestGame.Model
             scenes["start"] = new Scene
             {
                 Id = "start",
-                Text = "Вы стоите в тёмной комнате. Перед вами две двери: левая и правая.",
+                Text = "ScenceLoaderВы стоите в тёмной комнате. Перед вами две двери: левая и правая.",
                 ImagePath = DefaultImage,
                 Choices = new List<Choice>
                 {
@@ -123,13 +123,6 @@ namespace TextQuestGame.Model
                         NextSceneId = "right_room",
                         Condition = "",
                         Effect = ""
-                    },
-                    new Choice
-                    {
-                        Text = "Осмотреться",
-                        NextSceneId = "look_around",
-                        Condition = "",
-                        Effect = "AddItem:Фонарик"
                     }
                 }
             };
@@ -137,7 +130,7 @@ namespace TextQuestGame.Model
             scenes["left_room"] = new Scene
             {
                 Id = "left_room",
-                Text = "Вы вошли в библиотеку. На столе лежит древняя книга.",
+                Text = "Вы вошли в библиотеку.",
                 ImagePath = DefaultImage,
                 Choices = new List<Choice>
                 {
@@ -168,30 +161,13 @@ namespace TextQuestGame.Model
                     new Choice
                     {
                         Text = "Использовать ключ",
-                        NextSceneId = "secret_room",
-                        Condition = "HasItem:Ключ",
-                        Effect = "RemoveItem:Ключ"
+                        NextSceneId = "victory",
+                        Condition = "",
+                        Effect = ""
                     },
                     new Choice
                     {
                         Text = "Вернуться обратно",
-                        NextSceneId = "start",
-                        Condition = "",
-                        Effect = ""
-                    }
-                }
-            };
-
-            scenes["look_around"] = new Scene
-            {
-                Id = "look_around",
-                Text = "В углу комнаты вы нашли старый фонарик.",
-                ImagePath = DefaultImage,
-                Choices = new List<Choice>
-                {
-                    new Choice
-                    {
-                        Text = "Вернуться к дверям",
                         NextSceneId = "start",
                         Condition = "",
                         Effect = ""

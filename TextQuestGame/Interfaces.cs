@@ -9,6 +9,8 @@ namespace TextQuestGame
         string Id { get; }
         string Text { get; }
         List<Choice> Choices { get; }
+        public string ImagePath { get; set; }
+
     }
 
     public interface IGameState
@@ -62,7 +64,22 @@ namespace TextQuestGame
         List<string> GetAvailableChoices();
         string GetCurrentSceneImagePath();
         List<string> GetInventory();
+        T GetVariable<T>(string name, T defaultValue = default); // Добавляем для совместимости
     }
 
+    public interface IGameView
+    {
+        // События от пользовательского интерфейса
+        event Action<int> ChoiceSelected;
+        event Action SaveRequested;
+        event Action LoadRequested;
+        event Action NewGameRequested;
 
+        // Методы для обновления интерфейса
+        void DisplayScene(IScene scene);
+        void UpdateGameInfo(string info);
+        void ShowMessage(string message);
+        void ShowError(string error);
+        void UpdateInventory(List<string> inventory);
+    }
 }
