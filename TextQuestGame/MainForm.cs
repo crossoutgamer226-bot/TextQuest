@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Windows.Forms;
+using TextQuestGame.Model;
 
 namespace TextQuestGame
 {
@@ -390,10 +391,10 @@ namespace TextQuestGame
 
                 foreach (var item in inventory)
                 {
-                    inventoryListBox.Items.Add($"✅ {item}");
+                    inventoryListBox.Items.Add($"{item}");
                 }
 
-                inventoryLabel.Text = $"🎒 ИНВЕНТАРЬ ({inventory.Count})";
+                inventoryLabel.Text = $"ИНВЕНТАРЬ ({inventory.Count})";
             }
         }
 
@@ -431,18 +432,19 @@ namespace TextQuestGame
             MessageBox.Show(error, "Ошибка",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-        public void DisplayScene(string text, List<string> choices)
+        public void DisplayScene(IScene scene)
         {
-            sceneText.Text = text;
-            choicePanel.Controls.Clear();
-
-            for (int i = 0; i < choices.Count; i++)
+            if (scene == null)
             {
-                var button = new Button { Text = choices[i], Tag = i, Width = 200 };
-                button.Click += (s, e) => ChoiceSelected?.Invoke((int)button.Tag);
-                choicePanel.Controls.Add(button);
+                ShowError("Ошибка: сцена не найдена!");
+                return;
             }
-        
+
+            sceneText.Text = scene.Text;
+
+            LoadSceneImage(scene.ImagePath);
+
+            DisplayChoices(scene.Choices);
         }
         public event Action<int> ChoiceSelected;
         public event Action SaveRequested;
