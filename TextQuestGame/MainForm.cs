@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace TextQuestGame
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, IGameView
     {
         private FlowLayoutPanel choicePanel;
         private RichTextBox sceneText;
@@ -38,6 +38,7 @@ namespace TextQuestGame
             this.StartPosition = FormStartPosition.CenterScreen;
 
             CreateControls();
+            InitializeContextMenu();
 
         }
 
@@ -214,6 +215,25 @@ namespace TextQuestGame
             });
         }
 
+        private void InitializeContextMenu()
+        {
+            var contextMenu = new ContextMenuStrip();
+
+            var copyItem = new ToolStripMenuItem("Копировать текст");
+            copyItem.Click += (s, e) =>
+            {
+                if (!string.IsNullOrEmpty(sceneText.SelectedText))
+                {
+                    Clipboard.SetText(sceneText.SelectedText);
+                }
+            };
+
+            contextMenu.Items.Add(copyItem);
+            contextMenu.Items.Add(new ToolStripSeparator());
+            contextMenu.Items.Add("Очистить", null, (s, e) => sceneText.Clear());
+
+            sceneText.ContextMenuStrip = contextMenu;
+        }
         public void DisplayScene(string text, List<string> choices)
         {
             sceneText.Text = text;
