@@ -63,6 +63,7 @@ namespace TextQuestGame
         List<string> GetAvailableChoices();
         string GetCurrentSceneImagePath();
         List<string> GetInventory();
+        T GetVariable<T>(string name, T defaultValue = default);
     }
 
 
