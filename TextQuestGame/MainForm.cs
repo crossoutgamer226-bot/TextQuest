@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace TextQuestGame
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, IGameView
     {
         private FlowLayoutPanel choicePanel;
         private RichTextBox sceneText;
@@ -38,6 +38,7 @@ namespace TextQuestGame
             this.StartPosition = FormStartPosition.CenterScreen;
 
             CreateControls();
+            InitializeContextMenu();
 
         }
 
@@ -214,6 +215,222 @@ namespace TextQuestGame
             });
         }
 
+        private void InitializeContextMenu()
+        {
+            var contextMenu = new ContextMenuStrip();
+
+            var copyItem = new ToolStripMenuItem("Копировать текст");
+            copyItem.Click += (s, e) =>
+            {
+                if (!string.IsNullOrEmpty(sceneText.SelectedText))
+                {
+                    Clipboard.SetText(sceneText.SelectedText);
+                }
+            };
+
+            contextMenu.Items.Add(copyItem);
+            contextMenu.Items.Add(new ToolStripSeparator());
+            contextMenu.Items.Add("Очистить", null, (s, e) => sceneText.Clear());
+
+            sceneText.ContextMenuStrip = contextMenu;
+        }
+
+        private Image CreateDefaultImage()
+        {
+            var bitmap = new Bitmap(800, 250);
+            using (var g = Graphics.FromImage(bitmap))
+            {
+                g.Clear(Color.DarkSlateGray);
+
+                var gradientBrush = new LinearGradientBrush(
+                    new Point(0, 0),
+                    new Point(800, 250),
+                    Color.DarkSlateBlue,
+                    Color.DarkSlateGray);
+                g.FillRectangle(gradientBrush, 0, 0, 800, 250);
+
+                g.DrawString("Текстовый квест",
+                    new Font("Arial", 24, FontStyle.Bold),
+                    Brushes.White,
+                    new PointF(280, 80));
+
+                g.DrawString("Изображение сцены",
+                    new Font("Arial", 16, FontStyle.Regular),
+                    Brushes.LightGray,
+                    new PointF(310, 120));
+
+                g.DrawString("День 2: Улучшенный интерфейс",
+                    new Font("Arial", 10, FontStyle.Italic),
+                    Brushes.Silver,
+                    new PointF(300, 160));
+
+                g.DrawRectangle(new Pen(Color.Silver, 2), 10, 10, 780, 230);
+            }
+            return bitmap;
+        }
+
+        private void LoadSceneImage(string imagePath)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
+                {
+                    scenePictureBox.Image = Image.FromFile(imagePath);
+                    scenePictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                }
+                else
+                {
+                    scenePictureBox.Image = CreateDefaultImage();
+                }
+            }
+            catch (Exception ex)
+            {
+                scenePictureBox.Image = CreateDefaultImage();
+                Console.WriteLine($"Ошибка загрузки картинки: {ex.Message}");
+            }
+        }
+
+        private void DisplayChoices(List<Choice> choices)
+        {
+            choicePanel.Controls.Clear();
+
+            if (choices == null || choices.Count == 0)
+            {
+                var label = new Label
+                {
+                    Text = "Конец игры или нет вариантов выбора. Начните новую игру!",
+                    Font = new Font("Arial", 12, FontStyle.Bold),
+                    ForeColor = Color.DarkRed,
+                    AutoSize = true,
+                    Margin = new Padding(10)
+                };
+                choicePanel.Controls.Add(label);
+                return;
+            }
+
+            for (int i = 0; i < choices.Count; i++)
+            {
+                var choice = choices[i];
+
+                var button = new Button
+                {
+                    Text = $"{i + 1}. {choice.Text}",
+                    Tag = i,
+                    Width = choicePanel.ClientSize.Width - 40,
+                    Height = 50,
+                    Font = new Font("Arial", 10, FontStyle.Bold),
+                    BackColor = Color.CornflowerBlue,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Margin = new Padding(5),
+                    TextAlign = ContentAlignment.MiddleLeft,
+                    Padding = new Padding(15, 0, 0, 0)
+                };
+
+                button.FlatAppearance.BorderColor = Color.DarkBlue;
+                button.FlatAppearance.BorderSize = 2;
+
+                if (!string.IsNullOrEmpty(choice.Condition))
+                {
+                    buttonToolTip.SetToolTip(button, $"Требуется: {choice.Condition}");
+                }
+
+                button.Click += (s, e) => ChoiceSelected?.Invoke((int)button.Tag);
+
+                button.MouseEnter += (s, e) =>
+                {
+                    button.BackColor = Color.RoyalBlue;
+                    button.Cursor = Cursors.Hand;
+                };
+
+                button.MouseLeave += (s, e) => button.BackColor = Color.CornflowerBlue;
+
+                choicePanel.Controls.Add(button);
+            }
+        }
+
+        public void DisplayScene(Scene scene)
+        {
+            if (scene == null)
+            {
+                ShowError("Ошибка: сцена не найдена!");
+                return;
+            }
+
+            sceneText.Text = scene.Text;
+
+            LoadSceneImage(scene.ImagePath);
+
+            DisplayChoices(scene.Choices);
+        }
+
+        public void UpdateInventory(List<string> inventory)
+        {
+            if (inventoryListBox.InvokeRequired)
+            {
+                inventoryListBox.Invoke(new Action(() => UpdateInventory(inventory)));
+                return;
+            }
+
+            inventoryListBox.Items.Clear();
+
+            if (inventory == null || inventory.Count == 0)
+            {
+                inventoryListBox.Items.Add("Инвентарь пуст");
+                inventoryListBox.Items.Add("");
+                inventoryListBox.Items.Add("Находите предметы");
+                inventoryListBox.Items.Add("во время игры!");
+                inventoryListBox.ForeColor = Color.Gray;
+                inventoryListBox.Font = new Font("Arial", 9, FontStyle.Italic);
+            }
+            else
+            {
+                inventoryListBox.Font = new Font("Arial", 10, FontStyle.Regular);
+                inventoryListBox.ForeColor = Color.DarkGreen;
+
+                foreach (var item in inventory)
+                {
+                    inventoryListBox.Items.Add($"✅ {item}");
+                }
+
+                inventoryLabel.Text = $"🎒 ИНВЕНТАРЬ ({inventory.Count})";
+            }
+        }
+
+        public void UpdateGameInfo(string info)
+        {
+            if (statusStrip.InvokeRequired)
+            {
+                statusStrip.Invoke(new Action(() => UpdateGameInfo(info)));
+                return;
+            }
+
+            statusLabel.Text = info ?? "Готов к игре";
+        }
+
+        public void ShowMessage(string message)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => ShowMessage(message)));
+                return;
+            }
+
+            MessageBox.Show(message, "Сообщение",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public void ShowError(string error)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => ShowError(error)));
+                return;
+            }
+
+            MessageBox.Show(error, "Ошибка",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
         public void DisplayScene(string text, List<string> choices)
         {
             sceneText.Text = text;
@@ -231,6 +448,20 @@ namespace TextQuestGame
         public event Action SaveRequested;
         public event Action LoadRequested;
         public event Action NewGameRequested;
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                buttonToolTip?.Dispose();
+                scenePictureBox?.Image?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 
 }
