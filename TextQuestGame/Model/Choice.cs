@@ -12,5 +12,4 @@ namespace TextQuestGame
         public string Condition { get; set; }
         public string Effect { get; set; }
     }
-
 }
