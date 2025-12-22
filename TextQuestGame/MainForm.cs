@@ -360,6 +360,41 @@ namespace TextQuestGame
                 inventoryLabel.Text = $"🎒 ИНВЕНТАРЬ ({inventory.Count})";
             }
         }
+
+        public void UpdateGameInfo(string info)
+        {
+            if (statusStrip.InvokeRequired)
+            {
+                statusStrip.Invoke(new Action(() => UpdateGameInfo(info)));
+                return;
+            }
+
+            statusLabel.Text = info ?? "Готов к игре";
+        }
+
+        public void ShowMessage(string message)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => ShowMessage(message)));
+                return;
+            }
+
+            MessageBox.Show(message, "Сообщение",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public void ShowError(string error)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => ShowError(error)));
+                return;
+            }
+
+            MessageBox.Show(error, "Ошибка",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
         public void DisplayScene(string text, List<string> choices)
         {
             sceneText.Text = text;
