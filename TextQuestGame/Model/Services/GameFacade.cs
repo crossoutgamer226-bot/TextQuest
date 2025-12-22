@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 
 namespace TextQuestGame.Model.Services
 {
@@ -69,14 +69,6 @@ namespace TextQuestGame.Model.Services
         public List<string> GetInventory()
         {
             return new List<string>(_stateService.Inventory);
-        }
-
-        // Реализуем GetVariable для совместимости
-        public T GetVariable<T>(string name, T defaultValue = default)
-        {
-            // Предполагаем, что IGameStateService имеет метод GetVariable
-            // Если нет, нужно добавить в IGameStateService
-            return _stateService.GetVariable(name, defaultValue);
         }
     }
 }

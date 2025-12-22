@@ -8,10 +8,11 @@ namespace TextQuestGame
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            using (var appController = new Presenter.ApplicationController())
-            {
-                appController.Start();
-            }
+            var form = new MainForm();
+            var game = new GameService();
+            var presenter = new GamePresenter(form, game);
+
+            Application.Run(form);
         }
     }
 }
