@@ -12,7 +12,7 @@ namespace TextQuestGame.Presenter
         private readonly IGameFacade _game;
         private readonly IGameView _view;
 
-        public GamePresenter(MainForm view, IGameService game)
+        public GamePresenter(IGameView view, IGameFacade game)
         {
             _view = view;
             _game = game;
