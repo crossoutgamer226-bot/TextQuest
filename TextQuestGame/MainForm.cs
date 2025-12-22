@@ -269,6 +269,27 @@ namespace TextQuestGame
             return bitmap;
         }
 
+        private void LoadSceneImage(string imagePath)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
+                {
+                    scenePictureBox.Image = Image.FromFile(imagePath);
+                    scenePictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                }
+                else
+                {
+                    scenePictureBox.Image = CreateDefaultImage();
+                }
+            }
+            catch (Exception ex)
+            {
+                scenePictureBox.Image = CreateDefaultImage();
+                Console.WriteLine($"Ошибка загрузки картинки: {ex.Message}");
+            }
+        }
+
         private void DisplayChoices(List<Choice> choices)
         {
             choicePanel.Controls.Clear();
@@ -326,6 +347,21 @@ namespace TextQuestGame
 
                 choicePanel.Controls.Add(button);
             }
+        }
+
+        public void DisplayScene(Scene scene)
+        {
+            if (scene == null)
+            {
+                ShowError("Ошибка: сцена не найдена!");
+                return;
+            }
+
+            sceneText.Text = scene.Text;
+
+            LoadSceneImage(scene.ImagePath);
+
+            DisplayChoices(scene.Choices);
         }
 
         public void UpdateInventory(List<string> inventory)
@@ -412,6 +448,20 @@ namespace TextQuestGame
         public event Action SaveRequested;
         public event Action LoadRequested;
         public event Action NewGameRequested;
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                buttonToolTip?.Dispose();
+                scenePictureBox?.Image?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 
 }
