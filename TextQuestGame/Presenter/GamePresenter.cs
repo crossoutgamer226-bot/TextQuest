@@ -5,12 +5,12 @@ using System.Windows.Forms;
 using TextQuestGame.Model;
 using TextQuestGame.Model.Services;
 
-namespace TextQuestGame
+namespace TextQuestGame.Presenter
 {
     public class GamePresenter
     {
-        private readonly IGameService _game;
-        private readonly MainForm _view;
+        private readonly IGameFacade _game;
+        private readonly IGameView _view;
 
         public GamePresenter(MainForm view, IGameService game)
         {
@@ -18,9 +18,9 @@ namespace TextQuestGame
             _game = game;
 
             _view.ChoiceSelected += OnChoiceSelected;
-            _view.OnSave += () => _game.SaveGame("save.json");
-            _view.OnLoad += () => { _game.LoadGame("save.json"); UpdateView(); };
-            _view.OnNewGame += () => { /* Reset game */ UpdateView(); };
+            _view.SaveRequested += OnSaveRequested;
+            _view.LoadRequested += OnLoadRequested;
+            _view.NewGameRequested += OnNewGameRequested;
 
             UpdateView();
         }
