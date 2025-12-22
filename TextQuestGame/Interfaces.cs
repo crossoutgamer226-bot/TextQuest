@@ -9,6 +9,7 @@ namespace TextQuestGame
         string Id { get; }
         string Text { get; }
         List<Choice> Choices { get; }
+        public string ImagePath { get; set; }
     }
 
     public interface IGameState
