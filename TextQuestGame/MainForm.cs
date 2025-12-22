@@ -234,6 +234,40 @@ namespace TextQuestGame
 
             sceneText.ContextMenuStrip = contextMenu;
         }
+
+        private Image CreateDefaultImage()
+        {
+            var bitmap = new Bitmap(800, 250);
+            using (var g = Graphics.FromImage(bitmap))
+            {
+                g.Clear(Color.DarkSlateGray);
+
+                var gradientBrush = new LinearGradientBrush(
+                    new Point(0, 0),
+                    new Point(800, 250),
+                    Color.DarkSlateBlue,
+                    Color.DarkSlateGray);
+                g.FillRectangle(gradientBrush, 0, 0, 800, 250);
+
+                g.DrawString("Текстовый квест",
+                    new Font("Arial", 24, FontStyle.Bold),
+                    Brushes.White,
+                    new PointF(280, 80));
+
+                g.DrawString("Изображение сцены",
+                    new Font("Arial", 16, FontStyle.Regular),
+                    Brushes.LightGray,
+                    new PointF(310, 120));
+
+                g.DrawString("День 2: Улучшенный интерфейс",
+                    new Font("Arial", 10, FontStyle.Italic),
+                    Brushes.Silver,
+                    new PointF(300, 160));
+
+                g.DrawRectangle(new Pen(Color.Silver, 2), 10, 10, 780, 230);
+            }
+            return bitmap;
+        }
         public void DisplayScene(string text, List<string> choices)
         {
             sceneText.Text = text;
