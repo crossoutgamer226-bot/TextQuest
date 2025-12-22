@@ -70,5 +70,10 @@ namespace TextQuestGame.Model.Services
         {
             return new List<string>(_stateService.Inventory);
         }
+
+        public T GetVariable<T>(string name, T defaultValue = default)
+        {
+            return _stateService.GetVariable(name, defaultValue);
+        }
     }
 }

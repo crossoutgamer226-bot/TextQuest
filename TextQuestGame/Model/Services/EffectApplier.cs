@@ -12,6 +12,17 @@ namespace TextQuestGame.Model.Services
     {
         public void Apply(string effect, IGameStateService state)
         {
+            if (string.IsNullOrEmpty(effect)) return;
+
+            var effects = effect.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var singleEffect in effects)
+            {
+                ApplySingleEffect(singleEffect.Trim(), state);
+            }
+        }
+        private void ApplySingleEffect(string effect, IGameStateService state)
+        {
             var parts = effect.Split(':');
             if (parts.Length == 0) return;
 
@@ -28,8 +39,20 @@ namespace TextQuestGame.Model.Services
                     break;
 
                 case "setvariable":
-                    if (parts.Length > 2) state.SetVariable(parts[1], parts[2]);
+                    if (parts.Length > 2)
+                    {
+                        var name = parts[1];
+                        var value = parts[2];
+
+                        if (int.TryParse(value, out int intValue))
+                            state.SetVariable(name, intValue);
+                        else if (bool.TryParse(value, out bool boolValue))
+                            state.SetVariable(name, boolValue);
+                        else
+                            state.SetVariable(name, value);
+                    }
                     break;
+
             }
         }
     }
