@@ -268,6 +268,98 @@ namespace TextQuestGame
             }
             return bitmap;
         }
+
+        private void DisplayChoices(List<Choice> choices)
+        {
+            choicePanel.Controls.Clear();
+
+            if (choices == null || choices.Count == 0)
+            {
+                var label = new Label
+                {
+                    Text = "Конец игры или нет вариантов выбора. Начните новую игру!",
+                    Font = new Font("Arial", 12, FontStyle.Bold),
+                    ForeColor = Color.DarkRed,
+                    AutoSize = true,
+                    Margin = new Padding(10)
+                };
+                choicePanel.Controls.Add(label);
+                return;
+            }
+
+            for (int i = 0; i < choices.Count; i++)
+            {
+                var choice = choices[i];
+
+                var button = new Button
+                {
+                    Text = $"{i + 1}. {choice.Text}",
+                    Tag = i,
+                    Width = choicePanel.ClientSize.Width - 40,
+                    Height = 50,
+                    Font = new Font("Arial", 10, FontStyle.Bold),
+                    BackColor = Color.CornflowerBlue,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Margin = new Padding(5),
+                    TextAlign = ContentAlignment.MiddleLeft,
+                    Padding = new Padding(15, 0, 0, 0)
+                };
+
+                button.FlatAppearance.BorderColor = Color.DarkBlue;
+                button.FlatAppearance.BorderSize = 2;
+
+                if (!string.IsNullOrEmpty(choice.Condition))
+                {
+                    buttonToolTip.SetToolTip(button, $"Требуется: {choice.Condition}");
+                }
+
+                button.Click += (s, e) => ChoiceSelected?.Invoke((int)button.Tag);
+
+                button.MouseEnter += (s, e) =>
+                {
+                    button.BackColor = Color.RoyalBlue;
+                    button.Cursor = Cursors.Hand;
+                };
+
+                button.MouseLeave += (s, e) => button.BackColor = Color.CornflowerBlue;
+
+                choicePanel.Controls.Add(button);
+            }
+        }
+
+        public void UpdateInventory(List<string> inventory)
+        {
+            if (inventoryListBox.InvokeRequired)
+            {
+                inventoryListBox.Invoke(new Action(() => UpdateInventory(inventory)));
+                return;
+            }
+
+            inventoryListBox.Items.Clear();
+
+            if (inventory == null || inventory.Count == 0)
+            {
+                inventoryListBox.Items.Add("Инвентарь пуст");
+                inventoryListBox.Items.Add("");
+                inventoryListBox.Items.Add("Находите предметы");
+                inventoryListBox.Items.Add("во время игры!");
+                inventoryListBox.ForeColor = Color.Gray;
+                inventoryListBox.Font = new Font("Arial", 9, FontStyle.Italic);
+            }
+            else
+            {
+                inventoryListBox.Font = new Font("Arial", 10, FontStyle.Regular);
+                inventoryListBox.ForeColor = Color.DarkGreen;
+
+                foreach (var item in inventory)
+                {
+                    inventoryListBox.Items.Add($"✅ {item}");
+                }
+
+                inventoryLabel.Text = $"🎒 ИНВЕНТАРЬ ({inventory.Count})";
+            }
+        }
         public void DisplayScene(string text, List<string> choices)
         {
             sceneText.Text = text;
