@@ -27,8 +27,65 @@ namespace TextQuestGame.Presenter
 
         private void OnChoiceSelected(int index)
         {
-            _game.MakeChoice(index);
-            UpdateView();
+            try
+            {
+                _game.MakeChoice(index);
+                UpdateView();
+            }
+            catch (Exception ex)
+            {
+                _view.ShowError($"Ошибка при выборе: {ex.Message}");
+            }
+        }
+
+        private void OnSaveRequested()
+        {
+            try
+            {
+                _game.SaveGame("save.json");
+                _view.ShowMessage("Игра успешно сохранена!");
+            }
+            catch (Exception ex)
+            {
+                _view.ShowError($"Ошибка сохранения: {ex.Message}");
+            }
+        }
+
+        private void OnLoadRequested()
+        {
+            try
+            {
+                _game.LoadGame("save.json");
+                UpdateView();
+                _view.ShowMessage("Игра загружена!");
+            }
+            catch (Exception ex)
+            {
+                _view.ShowError($"Ошибка загрузки: {ex.Message}\nФайл сохранения не найден или поврежден.");
+            }
+        }
+
+        private void OnNewGameRequested()
+        {
+            try
+            {
+                var result = MessageBox.Show(
+                    "Начать новую игру?\nВсе несохраненные данные будут потеряны.",
+                    "Новая игра",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    _game.ResetGame();
+                    UpdateView();
+                    _view.ShowMessage("Новая игра начата!");
+                }
+            }
+            catch (Exception ex)
+            {
+                _view.ShowError($"Ошибка начала новой игры: {ex.Message}");
+            }
         }
 
         private void UpdateView()
