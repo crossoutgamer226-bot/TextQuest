@@ -90,10 +90,84 @@ namespace TextQuestGame.Presenter
 
         private void UpdateView()
         {
+            try
+            {
+
+                var scene = _game.GetCurrentScene();
+                if (scene == null)
+                {
+                    _view.ShowError("Не удалось загрузить сцену");
+                    return;
+                }
+
+
+                _view.DisplayScene(scene);
+
+
+                _view.UpdateInventory(_game.GetInventory());
+
+
+                var gameInfo = BuildGameInfo();
+                _view.UpdateGameInfo(gameInfo);
+
+
+                CheckAvailableChoices();
+            }
+            catch (Exception ex)
+            {
+                _view.ShowError($"Ошибка обновления интерфейса: {ex.Message}");
+            }
+        }
+
+        private string BuildGameInfo()
+        {
+            var info = $"Сцена: {_game.GetCurrentScene().Id}";
+
+
+            var inventory = _game.GetInventory();
+            if (inventory != null)
+            {
+                info += $" | Предметов: {inventory.Count}";
+            }
+
+            var health = GetVariableSafe<int>("health", 100);
+            info += $" | Здоровье: {health}";
+
+            var money = GetVariableSafe<int>("money", 0);
+            if (money > 0)
+            {
+                info += $" | Деньги: {money}";
+            }
+
+            return info;
+        }
+
+        private T GetVariableSafe<T>(string name, T defaultValue = default)
+        {
+            try
+            {
+
+                return _game.GetVariable<T>(name, default);
+
+            }
+            catch
+            {
+                return defaultValue;
+            }
+        }
+
+        private void CheckAvailableChoices()
+        {
             var scene = _game.GetCurrentScene();
-            _view.DisplayScene(scene.Text,
-                scene.Choices.Select(c => c.Text).ToList());
+            if (scene != null && scene.Choices.Count == 0)
+            {
+                _view.ShowMessage("Конец этой сюжетной линии. Начните новую игру или загрузите сохранение.");
+            }
+        }
+        public void RefreshView()
+        {
+            UpdateView();
         }
     }
-
 }
+    
