@@ -33,6 +33,9 @@ namespace TextQuestGame.Model.Services
 
         public void ProcessChoice(Choice choice, IGameStateService state)
         {
+            if (choice == null || state == null)
+                return;
+
             if (CheckCondition(choice.Condition, state))
             {
                 ApplyEffect(choice.Effect, state);
