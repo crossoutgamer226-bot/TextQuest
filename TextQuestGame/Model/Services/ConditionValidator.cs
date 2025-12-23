@@ -13,9 +13,11 @@ namespace TextQuestGame.Model.Services
     {
         public bool Validate(string condition, IGameStateService state)
         {
+            if (string.IsNullOrEmpty(condition))
+                return true;
+
             var parts = condition.Split(':');
             if (parts.Length == 0) return true;
-
             var conditionType = parts[0].ToLower();
 
             switch (conditionType)
