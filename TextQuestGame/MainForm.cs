@@ -459,7 +459,6 @@ namespace TextQuestGame
             }
             base.Dispose(disposing);
         }
-
         private void MainForm_Load(object sender, EventArgs e)
         {
 
