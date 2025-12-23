@@ -27,7 +27,7 @@
 	{
 		"Id": "left_room",
 		"Text": "Вы вошли в библиотеку. На столе лежит древняя книга и блестящий ключ.",
-		"ImagePath": "Images/default.jpg",
+		"ImagePath": "Images/KeyBook.jpg",
 		"Choices": [
 			{
 				"Text": "Взять книгу",
@@ -52,7 +52,7 @@
 	{
 		"Id": "right_room",
 		"Text": "Комната заперта. На двери висит большой замок.",
-		"ImagePath": "Images/default.jpg",
+		"ImagePath": "Images/DoorLock.jpg",
 		"Choices": [
 			{
 				"Text": "Попытаться открыть дверь",
@@ -77,7 +77,7 @@
 	{
 		"Id": "book_taken",
 		"Text": "Вы взяли древнюю книгу. Она тяжелая и выглядит ценной.",
-		"ImagePath": "Images/default.jpg",
+		"ImagePath": "Images/Book.jpg",
 		"Choices": [
 			{
 				"Text": "Вернуться обратно",
@@ -103,7 +103,7 @@
 	{
 		"Id": "door_locked",
 		"Text": "Дверь не поддается. Вам нужен ключ.",
-		"ImagePath": "Images/default.jpg",
+		"ImagePath": "Images/Lock.jpg",
 		"Choices": [
 			{
 				"Text": "Вернуться обратно",
@@ -129,7 +129,7 @@
 	{
 		"Id": "look_around",
 		"Text": "Вы осмотрелись и заметили потайную дверь в стене.",
-		"ImagePath": "Images/default.jpg",
+		"ImagePath": "Images/HiddenDoor.jpg",
 		"Choices": [
 			{
 				"Text": "Открыть потайную дверь",
@@ -148,7 +148,7 @@
 	{
 		"Id": "hidden_room",
 		"Text": "Вы нашли скрытую комнату! Здесь лежат старинные свитки.",
-		"ImagePath": "Images/default.jpg",
+		"ImagePath": "Images/HiddenRoom.jpg",
 		"Choices": [
 			{
 				"Text": "Взять свитки",
@@ -167,7 +167,7 @@
 	{
 		"Id": "scrolls_taken",
 		"Text": "Вы взяли старинные свитки. Возможно, они содержат секреты этого места.",
-		"ImagePath": "Images/default.jpg",
+		"ImagePath": "Images/Scrolls.jpg",
 		"Choices": [
 			{
 				"Text": "Вернуться обратно",
